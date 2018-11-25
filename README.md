@@ -10,7 +10,7 @@ For both processes, streaming tweets are listened by Kafka. Code to connect Twit
 
 In the first process, data are cleaned in real-time for storage using Spark Streaming framework and Python. Code for this process can be found at **tweetcollect_kafka.py**.
 
-In the second process, data are cleaned and analyze real-time using Spark Streaming framework and Python. The results are updated in real-time in my Plotly Dashboard as below. Code for this part is at **StreamSensing_wVizz.py**.
+In the second process, data are cleaned and analyzed in real-time using Spark Streaming framework and Python. The results are updated in seconds in my Plotly Dashboard as below. Code for this part is at **StreamSensing_wVizz.py**.
 
 ![](output_FvhBEC.gif)
 
