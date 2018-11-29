@@ -23,3 +23,9 @@ The workflow for collecting and analyzing articles from traditional news media i
 ## Tweets and News from Articles Joining
 Codes to query data from Cosmos DB and prepare dataframes for analysis in Spark can be found at **connect_cosmos_spark.py**
 
+Data retrieved from Cosmos DB are cleaned up further on Spark for the purpose of analysis. Codes can be found at **clean_data_on_spark.py**
+
+LDA analysis was conducted on News corpus at **LDA_news.py**
+
+Full analysis and visualization on Twitter and News data can be found at **twitter_news_analytics.py**
+

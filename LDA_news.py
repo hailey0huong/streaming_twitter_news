@@ -21,7 +21,7 @@ spark = SparkSession \
     .enableHiveSupport() \
     .getOrCreate()
 
-df_news2 = spark.sql("SELECT * FROM mynewsdb.newsdata2")
+df_news2 = spark.sql("SELECT * FROM mynewsdb.newsdata")
 
 # CountVectorizer
 from pyspark.ml.feature import CountVectorizer , IDF
@@ -43,7 +43,7 @@ result_tfidf = idfModel.transform(result_cv)
 
 
 # LDA the whole corpus 
-from pyspark.mllib.clustering import LDA
+from pyspark.ml.clustering import LDA
 num_topics = 10
 max_iterations = 100
 

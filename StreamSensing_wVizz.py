@@ -3,16 +3,18 @@ This script is to read messages in Kafka streaming,
 process and analyze trend analysis on real-time Tweets
 (1) tokenization
 (2) stopwords removal
-(3) filtering
-(4) conversion into Term Document Matrix (TDM)
-(5) pattern analysis (TF-IDF)
-(6) Visualize real-time data on Plotly
+(3) stemming
+(4) filtering
+(5) conversion into Term Document Matrix (TDM)
+(6) pattern analysis (TF-IDF)
+(7) Visualize real-time data on Plotly
 
 Pyspark 2.0
 Python 2.7.15
 Kafka 0.8.2
 
 Experiment with hashtags #Bigdata #MachineLearning #AI
+
 
 '''
 
@@ -99,8 +101,11 @@ stopw = [u'i', u'me', u'my', u'myself', u'we', u'our',
         u'will', u'just', u'don', u'should', u'now', u'd', u'll', u'm', u'o', 
         u're', u've', u'y', u'ain', u'aren', u'couldn', u'didn', u'doesn', 
         u'hadn', u'hasn', u'haven', u'isn', u'ma', u'mightn', u'mustn', 
-        u'needn', u'shan', u'shouldn', u'wasn', u'weren', u'won', u'wouldn', u'would', 
-        u'gtgt',u'gtgtgt',u'thank',u'thanks', u'please']
+        u'needn', u'shan', u'shouldn', u'wasn', u'weren', u'won', u'wouldn', u'would']
+
+not_important_words = [u'gtgt',u'gtgtgt',u'thank',u'thanks', 
+                        u'please',u'gt',u'iot',u'yes',u'hey',u'move',u'data',u'big','amp']
+
 
 def process_tweet(tweet, hashtag):
     '''
@@ -108,6 +113,9 @@ def process_tweet(tweet, hashtag):
     '''
 
     text = tweet['text'].encode('utf-8')
+    #lemmatizer = WordNetLemmatizer()
+    stemmer = PorterStemmer()
+
 
     #Check if there is hashtag
     if hashtag not in text.lower():
@@ -118,14 +126,14 @@ def process_tweet(tweet, hashtag):
         text = unicodetoascii(text)
         text = re.sub("b\'", '', text)
         text = text.lower()
-        #Clean some words in tweets
+            #Clean some words in tweets
         text = re.sub(r'machine learning', 'machinelearning', text)
         text = re.sub(r'deep learning', 'deeplearning', text)
         text = re.sub(r'natural language processing', 'naturallanguageprocessing', text)
         text = re.sub(r'artificial intelligence', 'artificialintelligence', text)
         text = re.sub(r'big data', 'bigdata', text)
         text = re.sub(r'computer vision', 'computervision', text)
-        #Tokenize tweets
+            #Tokenize tweets
         tokens = text.split()
         tokens = [t for t in tokens if not re.search('http|https', t)]
         tokens = [t for t in tokens if not t.startswith('@')]
@@ -133,17 +141,21 @@ def process_tweet(tweet, hashtag):
         tokens = [re.sub("[^a-zA-Z]", "", t) for t in tokens]
         tokens = [t.rstrip() for t in tokens]
         tokens = [t.lstrip() for t in tokens]
+        #tokens = [lemmatizer.lemmatize(t) for t in tokens]
         tokens = [t for t in tokens if t not in stopw]
+        tokens = [stemmer.stem(t) for t in tokens]
         tokens = ['machinelearning' if re.search('^ml$', t) else t for t in tokens ]
         tokens = ['deeplearning'  if re.search('^dl$', t) else t for t in tokens]
         tokens = ['naturallanguageprocessing'  if re.search('^nlp$', t) else t for t in tokens]
         tokens = ['artificialintelligence'  if re.search('^ai$', t) else t for t in tokens]
         tokens = [t for t in tokens if len(t)>3 ]
-
+        tokens = [t for t in tokens if t not in not_important_words]
 
         tweet['processed_text'] = " ".join( tokens )
+
     except Exception, err:
         return (-100,err,tweet)
+
 
     return (1,tweet)
 
