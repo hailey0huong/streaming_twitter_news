@@ -8,10 +8,13 @@ There are 2 experiments conducted with Twitter Streaming data. The high-level wo
 ![](twitter_data_workflow.jpg)
 
 For both experiments, streaming tweets are listened by Kafka. Code to connect Twitter API and Kafka can be found at **twitter_to_kafka.py**.
+To run the code in your terminal window, type `python2.7 twitter_to_kafka.py`
 
-In the first experiment, data are cleaned in real-time for storage using Spark Streaming framework and Python. Code for this process can be found at **tweetcollect_kafka.py**.
+In the first experiment, data is collected from Kafka streams, cleaned in real-time, and sent to Cosmos DB for storage using Spark Streaming framework and Python. Code for this process can be found at **tweetcollect_kafka.py**.
+To run the whole process, type `spark-submit --packages org.apache.spark:spark-streaming-kafka-0-8_2.11:2.0.2 tweetcollect_kafka.py`
 
-In the second experiment, data are cleaned and analyzed in real-time using Spark Streaming framework and Python. The results are updated in seconds in my Plotly Dashboard as below. Code for this part is at **StreamSensing_wVizz.py**.
+In the second experiment, data is cleaned and analyzed in real-time using Spark Streaming framework and Python. The results are updated in seconds in a Plotly Dashboard as below. Code for this part is at **StreamSensing_wVizz.py**.
+To run the whole process, type `spark-submit --packages org.apache.spark:spark-streaming-kafka-0-8_2.11:2.0.2 StreamSensing_wVizz.py`
 
 ![](output_FvhBEC.gif)
 

@@ -34,6 +34,7 @@ df_twitter2 = spark.sql("SELECT * FROM mynewsdb.twitterdata")
 ##==================================================================
 
 source_data = df_news2.groupBy('PublishedDate','source_name').count().orderBy(['PublishedDate','count'], ascending=[0,0])
+min_date_n, max_date_n = df_news2.select(F.min("PublishedDate"), F.max("PublishedDate")).first()
 
 from pyspark.sql.window import Window
 from pyspark.sql.functions import rank, col, row_number
@@ -147,9 +148,9 @@ lemmatizer = WordNetLemmatizer()
 
 
 def process_text(text):
-	text = text.replace(r'\n', ' ')
-	text = re.sub("b\'", '', text)
-	text = text.lower()
+    text = text.replace(r'\n', ' ')
+    text = re.sub("b\'", '', text)
+    text = text.lower()
     tokens = text.split()
     tokens = [t.rstrip() for t in tokens]
     tokens = [t.rstrip(',') for t in tokens]
@@ -161,7 +162,7 @@ def process_text(text):
     tokens = [t for t in tokens if t not in stopw]
     tokens = [re.sub("[^a-zA-Z]", "", t) for t in tokens]
     filtered_tokens = [t for t in tokens if len(t) <=3 and t not in ['ai','nlp','ml','dl']]
-	tokens = [t for t in tokens if t not in filtered_tokens]
+    tokens = [t for t in tokens if t not in filtered_tokens]
     return ' '.join(tokens)
 
 #Create TDM for the news
